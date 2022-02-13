@@ -1,0 +1,80 @@
+﻿Notes:
+
+The purpose of the client (PS8) is to display the state of the world to the player and send
+control requests to the server
+
+3 purposes of the client:
+	1. Allow the user to connect to a server at a given address, and provide the player's name
+	2. Draw the state of the world as described to it by the server
+	3. Send control commands to the server. These commands represent player inputs, such as moving
+	   or firing
+
+We should NOT: 
+	1. Make any game decisions, such as whether a projectile hits another tank or wall
+	2. Anticipate the movement of updates of any object in the world. Even if the client sends
+	   a control request to the server, the server is free to ignore. Our client can not assume its 
+	   requests will affect the game. 
+
+Projects/descriptions:
+
+	* Model: Represents the world and the game state. The model classes here can be used by the client and the
+	         server. In this assignment, our model is passive and is only updated by what the server sends to the
+			 client. 
+
+	* Network Controller Proj: Use this network library to communicate between client and server. OnNetworkAction delegates in
+							   The library will be methods in the tankwars client. 
+
+							   Network Protocol: See PS8 assignment for the exact protocol. 
+
+
+
+	* Resources project: Contains readme, graphic files, sounds, and support libraries (like networkcontroller.dll).
+
+	* View Project: Contains the GUI code. View parts must be seperate from logic parts. Logic to parse info
+	                should not be in the form class, for example. Should not contain any model code. This has
+					a reference to NetworkController.
+
+					This project should: 
+						(1) draw objects in the game and the players health and scores
+						(2) draw the GUI controls, such as menu items and buttons
+						(3) Register basic event handlers for user inputs and controller events. These will invoke
+						    a method in the controller, and not do anything sophisticated. 
+
+					Minimum requirements:
+					    (1) Allow a player to declare a name and choose a server by IP address or host name
+						(2) Provide a way to display connection errors and retry connecting
+						(3) Draw the scene, including the tank, projectiles. First 8 players have different colors, then
+						    colors can be reused. The health, name, and score of each player should be displayed by their 
+							tank. You must change the color of the hp bar as it gets low, or an artistic way of drawing the 
+							beam and attack explosions. 
+						(4) GUI should be able to keep up with the server and draw frames as fast as the server sends information
+						    about the world, >60 frames per second
+						(5) Follow defined communication sequence and protocol
+						(6) Register keyboard and mouse handlers that recognize basic user inputs and invoke appropriate controller
+						    methods to process inputs. 
+
+					Not required:
+						(1) displaying frame rate
+						(2) zooming in and out
+
+	* Game Controller proj: Contains logic for parsing the data received by the server, updating the model 
+						    accordingly, and anything else we think belongs there. The key press handlers in the 
+							view are only landing points and should invoke controller methods here that contain
+							the actual logic
+
+							Responsible for parsing information received from the networkcontroller, and updating the model. 
+							Then, it must inform the view the world has changed so it can redraw. This happens via an event. 
+
+							Should also define methods that the view can invoke whenever certain user inputs occur,
+							and then decide which messages to send tot eh server, requesting that the tank moves, turns, aims,
+							fires, etc. 
+
+							Player controls: see help menu in the sample client. Should be the same as this. 
+
+			
+
+Things we need to remember or fix
+	remove from draw list/world dictionaries when they die! 💀
+	place LOCK in code --> lab 11
+	maybe referencing network dll
+	Line 111 in controller.cs in lab 11: do we need to do anything to these booleans?
